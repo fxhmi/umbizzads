@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "737455776598",
+    "project_id": "umbizzads-db",
+    "storage_bucket": "umbizzads-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737455776598:android:1fcc7de29937152c6a2cf7",
+        "android_client_info": {
+          "package_name": "com.fahmi.umbizz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737455776598-8qo9j866ls1g98bismgrmoi96oc5s0bh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2l_NWqlYp0qUxb4HjCJuxj8IEHXSvls4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737455776598-8qo9j866ls1g98bismgrmoi96oc5s0bh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
