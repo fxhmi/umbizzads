@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:umbizz/Helperfunctions/sharepref_helper.dart';
+import 'package:umbizz/globalVar.dart';
 
 class DatabaseMethods {
 
@@ -56,7 +57,7 @@ class DatabaseMethods {
     }
   }
 
-  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+  Future <Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -67,6 +68,7 @@ class DatabaseMethods {
 
   Future<Stream<QuerySnapshot>> getChatRooms() async {
     String myUsername = await SharedPreferenceHelper().getUserName();
+    //String myUsername = getUserName;
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .orderBy("lastMessageSendTs", descending: true)
@@ -74,10 +76,10 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  Future<QuerySnapshot> getUserInfo(String username) async {
+  Future <QuerySnapshot> getUserInfo(String username) async {
     return await FirebaseFirestore.instance
         .collection("users")
-        .where("userName", isEqualTo: username)
+        .where("nameChatId", isEqualTo: username)
         .get();
   }
 }

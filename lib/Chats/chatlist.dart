@@ -9,9 +9,10 @@ import 'package:umbizz/HomeScreen.dart';
 import 'package:umbizz/Services/chat_database.dart';
 import 'package:umbizz/Welcome/welcome_screen.dart';
 import 'package:umbizz/globalVar.dart';
+//import 'package:flutter_image/network.dart';
 
 class ChatList extends StatefulWidget {
-  //const ChatList({Key? key}) : super(key: key);
+  //const ChatList({Key key}) : super(key: key);
 
   @override
   _ChatListState createState() => _ChatListState();
@@ -33,6 +34,12 @@ class _ChatListState extends State<ChatList> {
     myUserName = getNameChatId;
     myEmail = userEmail;
     myUid = getUserId;
+
+    // myName = await SharedPreferenceHelper().getDisplayName();
+    // myProfilePic = await SharedPreferenceHelper().getUserProfileUrl();
+    // myUserName = await SharedPreferenceHelper().getUserName();
+    // myEmail = await SharedPreferenceHelper().getUserEmail();
+
     setState(() {});
   }
 
@@ -58,9 +65,9 @@ class _ChatListState extends State<ChatList> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
+              itemCount: snapshot.data.docs.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
               DocumentSnapshot ds = snapshot.data.docs[index];
               return ChatRoomListTile(ds["lastMessage"], ds.id, myUserName);
             })
@@ -88,7 +95,7 @@ class _ChatListState extends State<ChatList> {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(30),
               child: Image.network(
                 imgPro,
                 height: 40,
@@ -116,11 +123,11 @@ class _ChatListState extends State<ChatList> {
               itemBuilder: (context, index) {
               DocumentSnapshot ds = snapshot.data.docs[index];
               return searchListUserTile(
-
                   imgPro: ds['imgPro'],
                   userName: ds['userName'],
-                  email: ds['email'],
                   nameChatId: ds['nameChatId'],
+                  email: ds['email'],
+
 
                 // profileUrl: ds['imgPro'],
                 // name: ds['userName'],
@@ -195,7 +202,7 @@ class _ChatListState extends State<ChatList> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 12),
                           child: Icon(Icons.arrow_back)),
-                )
+                      )
                     : Container(),
                 Expanded(
                   child: Container(
@@ -213,7 +220,7 @@ class _ChatListState extends State<ChatList> {
                             child: TextField(
                               controller: searchUsernameEditingController,
                               decoration: InputDecoration(
-                                  border: InputBorder.none, hintText: "username"),
+                                  border: InputBorder.none, hintText: " Search username "),
                             )),
                         GestureDetector(
                             onTap: () {
@@ -237,6 +244,7 @@ class _ChatListState extends State<ChatList> {
 }
 
 class ChatRoomListTile extends StatefulWidget {
+
   final String lastMessage, chatRoomId, myUsername;
   ChatRoomListTile(this.lastMessage, this.chatRoomId, this.myUsername);
 
@@ -245,25 +253,20 @@ class ChatRoomListTile extends StatefulWidget {
 }
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
-  String profilePicUrl = "", name = "", nameChatId = "";
+  String profilePicUrl = "", name = "", username = "";
 
   getThisUserInfo() async {
-
-    nameChatId = widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
-
-    QuerySnapshot querySnapshot = await DatabaseMethods().getUserInfo(nameChatId);
-    //print("something bla bla ${querySnapshot.docs[0].id} ${querySnapshot.docs[0]["userName"]}  ${querySnapshot.docs[0]["imgPro"]}");
-    name = querySnapshot.docs[0]["userName"];
-    print("tolongggg $name");
-    profilePicUrl = querySnapshot.docs[0]["imgPro"];
-    print("sayaa $profilePicUrl");
-
+    username = widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
+    QuerySnapshot querySnapshot = await DatabaseMethods().getUserInfo(username);
+    print("something bla bla ${querySnapshot.docs[0].id} ${querySnapshot.docs[0]["userName"]}  ${querySnapshot.docs[0]["imgPro"]}");
+    name = "${querySnapshot.docs[0]["userName"]}";
+    profilePicUrl = "${querySnapshot.docs[0]["imgPro"]}";
     setState(() {});
   }
 
-  @override
+ @override
   void initState() {
-    getThisUserInfo();
+   getThisUserInfo();
     super.initState();
   }
 
@@ -274,16 +277,14 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ChatScreen(nameChatId, name)
+                builder: (context) => ChatScreen(username, name)
             )
         );
       },
-
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-
             ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Image.network(
@@ -299,7 +300,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.myUsername,
+                  name,
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 3),
