@@ -254,16 +254,23 @@ class _SearchProductState extends State<SearchProduct> {
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
-                colors: [
-                  Colors.blueAccent,
-                  Colors.redAccent,
-                ],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp),
+              colors: [
+                // Colors.deepPurple[300],
+                // Colors.blue,
+
+                Colors.lightBlueAccent,
+                Colors.blueAccent,
+
+                // Colors.blueGrey,
+                // Colors.grey,
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+            ),
           ),
         ),
+
       ),
       body: Center(
         child: Container(

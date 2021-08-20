@@ -376,7 +376,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             gradient: new LinearGradient(
               colors: [
                 Colors.deepPurple[300],
-                Colors.deepPurple,
+                Colors.blue,
+
+                // Colors.lightBlueAccent,
+                // Colors.blueAccent,
+
+                // Colors.blueGrey,
+                // Colors.grey,
               ],
               begin: const FractionalOffset(0.0, 0.0),
               end: const FractionalOffset(1.0, 0.0),

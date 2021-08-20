@@ -164,6 +164,25 @@ class _ChatListState extends State<ChatList> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Deal Chat"),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                Colors.deepPurple[300],
+                Colors.blue,
+
+                // Colors.lightBlueAccent,
+                // Colors.blueAccent,
+
+                // Colors.blueGrey,
+                // Colors.grey,
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+            ),
+          ),
+        ),
         leading: BackButton(
             onPressed: () {
               Navigator.push(
@@ -258,7 +277,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
   getThisUserInfo() async {
     username = widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
     QuerySnapshot querySnapshot = await DatabaseMethods().getUserInfo(username);
-    print("something bla bla ${querySnapshot.docs[0].id} ${querySnapshot.docs[0]["userName"]}  ${querySnapshot.docs[0]["imgPro"]}");
+    //print("something bla bla ${querySnapshot.docs[0].id} ${querySnapshot.docs[0]["userName"]}  ${querySnapshot.docs[0]["imgPro"]}");
     name = "${querySnapshot.docs[0]["userName"]}";
     profilePicUrl = "${querySnapshot.docs[0]["imgPro"]}";
     setState(() {});
@@ -283,7 +302,8 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
-        child: Row(
+        child: profilePicUrl == "" ? CircularProgressIndicator()
+        : Row(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(30),

@@ -567,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   semanticLabel: 'Text to announce in accessibility modes',
                 ),
 
-                title: Text('Message'),
+                title: Text('Deal Chat'),
                 onTap: () {
                   // FutureBuilder(
                   //   future: AuthMethods().getCurrentUser(),
