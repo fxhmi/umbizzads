@@ -14,6 +14,7 @@ String getUserId = "";
 String getNameChatId = "";
 String adUserName = "";
 String adUserImageUrl = "";
+String getBusinessName= "";
 
 String completeAddress = "";
 List<Placemark> placemarks;

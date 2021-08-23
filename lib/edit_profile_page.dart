@@ -27,6 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String userName;
   String userNumber;
   String about;
+  String businessName;
   QuerySnapshot users;
 
   File _image;
@@ -158,7 +159,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 5.0,),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Enter your new price',
+                      hintText: 'Update your business name',
+                    ),
+                    onChanged: (value){
+                      setState(() {
+                        this.businessName = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 5.0,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Update your about.',
                     ),
                     onChanged: (value){
                       setState(() {
@@ -194,6 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Map<String, dynamic> itemData = {
                       'userName': this.userName,
                       'userNumber': this.userNumber,
+                      'businessName': this.businessName,
                       'about' : this.about,
 
                     };
@@ -225,7 +238,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
 
         //showDialogForUpdateData(getUserId);
-
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
@@ -262,7 +274,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
             const SizedBox(height: 15),
             TextFieldWidget(
-              label: 'Full Name',
+              label: 'Display Name',
               text: getUserName,
               onChanged: (value) {
                 setState(() {
@@ -271,12 +283,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               },
             ),
 
-            // const SizedBox(height: 15),
-            // TextFieldWidget(
-            //   label: 'Email',
-            //   text: userEmail,
-            //   onChanged: (email) {},
-            // ),
 
             const SizedBox(height: 15),
             TextFieldWidget(
@@ -285,6 +291,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onChanged: (value) {
                 setState(() {
                   this.userNumber = value;
+                });
+              },
+            ),
+
+            const SizedBox(height: 15),
+            TextFieldWidget(
+              label: 'Business Name',
+              text: userEmail,
+              onChanged: (value) {
+                setState(() {
+                  this.businessName = value;
                 });
               },
             ),
@@ -321,8 +338,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Map<String, dynamic> itemData = {
                   'userName': this.userName,
                   'userNumber': this.userNumber,
+                  'businessName': this.businessName,
                   'about' : this.about,
-
                 };
 
                 FirebaseFirestore.instance.collection('users').doc().update(itemData).then((value){

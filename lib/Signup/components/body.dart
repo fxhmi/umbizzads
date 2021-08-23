@@ -123,6 +123,7 @@ class _SignupBodyState extends State<SignupBody> {
       'time': DateTime.now(),
       'status': "approved",
       'about': "Update your about",
+      'businessName': "Update business name",
       'email': userEmail,
       'nameChatId': userEmail.replaceAll("@gmail.com", "")
     };
@@ -138,87 +139,96 @@ class _SignupBodyState extends State<SignupBody> {
     double _screenWidth = MediaQuery.of(context).size.width,
     _screenHeight = MediaQuery.of(context).size.width;
 
-    return SignupBackground(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                chooseImage();
-              },
-              child: CircleAvatar(
-                radius: _screenWidth * 0.20,
-                backgroundColor: Colors.deepPurple[100],
-                backgroundImage: _image==null?null:FileImage(_image),
-                child: _image == null
-                ? Icon(
-                  //else show icon
-                  Icons.add_photo_alternate,
-                  size: _screenWidth* 0.20,
-                  color: Colors.white,
-              )
-                    :null,
-              )
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+          Color.fromRGBO(145, 131, 222, 1),
+          Color.fromRGBO(160, 148, 227, 1),
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+      ),
+      child: SignupBackground(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
 
-
-            SizedBox(height: _screenHeight*0.01),
-            RoundedInputField(
-              hintText: "Student Name",
-              icon: Icons.person,
-              onChanged: (value)
-                {
-                  _nameController.text = value;
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  chooseImage();
                 },
-            ),
-            RoundedInputField(
-              hintText: "Siswamail",
-              icon: Icons.alternate_email_rounded ,
-              onChanged: (value)
-              {
-                _emailController.text = value;
-              },
-            ),
-            RoundedInputField(
-              hintText: "Phone No. Exp: 012 XXX XXXX",
-              icon: Icons.add_ic_call,
-              onChanged: (value)
-              {
-                _phoneController.text = value;
-              },
-            ),
-            RoundedPasswordField(
-              onChanged: (value)
-              {
-                _passwordController.text = value;
-              },
-            ),
+                child: CircleAvatar(
+                  radius: _screenWidth * 0.20,
+                  backgroundColor: Colors.deepPurple[100],
+                  backgroundImage: _image==null?null:FileImage(_image),
+                  child: _image == null
+                  ? Icon(
+                    //else show icon
+                    Icons.add_photo_alternate,
+                    size: _screenWidth* 0.20,
+                    color: Colors.white,
+                )
+                      :null,
+                )
+              ),
 
-            RoundedButton(
-              text: "SIGN UP",
-              press: ()
-              {
-                upload();
-              },
-            ),
-            SizedBox(height: _screenHeight * 0.03,),
-            AlreadyHaveAnAccountCheck(
-              login: false,
-              press: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context)
-                      {
-                       return LoginScreen();
-                      },
-                  ),
-                );
-              },
-            )
-          ],
 
+              SizedBox(height: _screenHeight*0.01),
+              RoundedInputField(
+                hintText: "Display Name",
+                icon: Icons.person,
+                onChanged: (value)
+                  {
+                    _nameController.text = value;
+                  },
+              ),
+              RoundedInputField(
+                hintText: "Siswamail",
+                icon: Icons.alternate_email_rounded ,
+                onChanged: (value)
+                {
+                  _emailController.text = value;
+                },
+              ),
+              RoundedInputField(
+                hintText: "Phone No. Exp: 012 XXX XXXX",
+                icon: Icons.add_ic_call,
+                onChanged: (value)
+                {
+                  _phoneController.text = value;
+                },
+              ),
+              RoundedPasswordField(
+                onChanged: (value)
+                {
+                  _passwordController.text = value;
+                },
+              ),
+
+              RoundedButton(
+                text: "SIGN UP",
+                press: ()
+                {
+                  upload();
+                },
+              ),
+              SizedBox(height: _screenHeight * 0.03,),
+              AlreadyHaveAnAccountCheck(
+                login: false,
+                press: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context)
+                        {
+                         return LoginScreen();
+                        },
+                    ),
+                  );
+                },
+              )
+            ],
+
+          ),
         ),
       ),
     );

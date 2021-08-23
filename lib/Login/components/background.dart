@@ -14,9 +14,14 @@ class LoginBackground extends StatelessWidget {
 
     Size size = MediaQuery.of(context).size;
     return Container(
-
       height: size.height,
       width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+          Color.fromRGBO(145, 131, 222, 1),
+          Color.fromRGBO(160, 148, 227, 1),
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+      ),
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[

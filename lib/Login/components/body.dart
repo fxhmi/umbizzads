@@ -102,11 +102,14 @@ class _LoginBodyState extends State<LoginBody> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
             SizedBox(height: size.height * 0.05,),
-            SvgPicture.asset(
-              "assets/icons/login.svg",
-              height: size.height*0.45,
-            ),
+
+            AnimatedImage(),
+            // SvgPicture.asset(
+            //   "assets/icons/login.svg",
+            //   height: size.height*0.45,
+            // ),
             SizedBox(height: size.height * 0.005,),
             RoundedInputField(
 
@@ -146,7 +149,7 @@ class _LoginBodyState extends State<LoginBody> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                    child: Text("Forgot Password"),
+                    child: Text("Forgot Password", style: TextStyle(color: Colors.white54),),
                     onPressed: ()
                     => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResetScreen()))
                 ),
@@ -171,6 +174,35 @@ class _LoginBodyState extends State<LoginBody> {
           ],
         ),
     ),
+    );
+  }
+}
+
+class AnimatedImage extends StatefulWidget {
+  @override
+  _AnimatedImageState createState() => _AnimatedImageState();
+}
+
+class _AnimatedImageState extends State<AnimatedImage>
+    with SingleTickerProviderStateMixin {
+
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Stack(
+
+      children: [
+        Text("welcome           back!", style: TextStyle(fontSize: 45, fontFamily: 'Bebas', letterSpacing: 2.0, color: Colors.white,),),
+        Image.asset('assets/images/persondog.png'),
+
+      ],
     );
   }
 }

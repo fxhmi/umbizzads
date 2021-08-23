@@ -44,6 +44,25 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                Colors.deepPurple[300],
+                Colors.blue,
+
+                // Colors.lightBlueAccent,
+                // Colors.blueAccent,
+
+                // Colors.blueGrey,
+                // Colors.grey,
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+            ),
+          ),
+        ),
         title: Text(
           //default next is false, then after user enter 5 pic it turned to yes
           next ? "Please write Item's Info" : 'Choose 5 Item Images',
@@ -61,7 +80,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                       });
                     } else {
                       showToast(
-                        "Please select 5 images only...",
+                        "Please select 5 images...",
                         duration: 2,
                         gravity: Toast.CENTER,
                       );
@@ -119,7 +138,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
 
               SizedBox(height: 5.0),
               TextField(
-                decoration: InputDecoration(hintText: 'Enter Your Price'),
+                decoration: InputDecoration(hintText: 'Enter Your Price (RM)'),
                 onChanged: (value){
                   this.itemPrice = value;
                 },

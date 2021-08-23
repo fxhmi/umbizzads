@@ -3,14 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:umbizz/Chats/chat_screen.dart';
 import 'package:umbizz/Chats/chatlist.dart';
-import 'package:umbizz/Chats/chatscreen.dart';
 import 'package:umbizz/SearchProduct.dart';
 import 'package:umbizz/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:umbizz/Widgets/imageSliderScreen.dart';
 import 'package:umbizz/Widgets/loadingWidget.dart';
+import 'package:umbizz/animation.dart';
 import 'package:umbizz/globalVar.dart';
 import 'package:umbizz/profile_ads_screen.dart';
 import 'package:umbizz/profile_page.dart';
@@ -168,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
         getAbout = results.data()['about'];
         getUserId = results.data()['uid'];
         getNameChatId = results.data()['nameChatId'];
+        getBusinessName = results.data()['businessName'];
       });
     });
   }
@@ -455,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: (){
                 auth.signOut().then((_){
-                  Route newRoute = MaterialPageRoute(builder: (_) => WelcomeScreen());
+                  Route newRoute = MaterialPageRoute(builder: (_) => AnimationTest());
                   Navigator.pushReplacement(context, newRoute);
                 });
               },
