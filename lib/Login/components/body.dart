@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:toast/toast.dart';
 import 'package:umbizz/DialogBox/errorDialog.dart';
 import 'package:umbizz/DialogBox/loadingDialog.dart';
 import 'package:umbizz/HomeScreen.dart';
@@ -132,16 +133,15 @@ class _LoginBodyState extends State<LoginBody> {
             RoundedButton(
               text: "LOGIN",
               press: (){
-                _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty
-                    ? _login()
-                    : showDialog(
-                    context: context,
-                    builder: (con){
-                      return ErrorAlertDialog(
-                        message: 'Please provide your credentials for Login',
-                      );
-                    });
-
+                if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty ) {
+                  _login();
+                } else {
+                  showToast(
+                    "Please provide your credentials for Login or click Forgot Password to reset your Password",
+                    duration: 3,
+                    gravity: Toast.BOTTOM,
+                  );
+                }
               },
             ),
 
@@ -176,6 +176,11 @@ class _LoginBodyState extends State<LoginBody> {
     ),
     );
   }
+
+  void showToast(String msg, {int duration, int gravity}){
+    Toast.show(msg, context, duration: duration, gravity: gravity);
+  }
+
 }
 
 class AnimatedImage extends StatefulWidget {
@@ -205,4 +210,6 @@ class _AnimatedImageState extends State<AnimatedImage>
       ],
     );
   }
+
+
 }

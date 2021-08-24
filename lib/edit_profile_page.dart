@@ -134,7 +134,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
 
-
                   TextFormField(
                     decoration: InputDecoration(
                       hintText: getUserName,
@@ -148,7 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 5.0,),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Enter your new phone no.',
+                      hintText: getUserNum,
                     ),
                     onChanged: (value){
                       setState(() {
@@ -170,7 +169,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 5.0,),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Update your about.',
+                      hintText: getAbout,
                     ),
                     onChanged: (value){
                       setState(() {
@@ -244,12 +243,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
           children: [
 
             const SizedBox(height: 15),
-            ProfileWidget(
-              imagePath: getUserImageUrl,
-              isEdit: true,
-              onClicked: () async {
-                chooseImage();
-              },
+            InkWell(
+              child: ProfileWidget(
+                imagePath: userPhotoUrl,
+                isEdit: true,
+                onClicked: () async {
+                  chooseImage();
+                },
+              ),
+
             ),
 
             const SizedBox(height: 15),

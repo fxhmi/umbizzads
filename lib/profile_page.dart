@@ -94,17 +94,10 @@ class _ProfilePageState extends State<ProfilePage> {
       userPhotoUrl = url;
       print(userPhotoUrl);
       _uploadPhoto();
-
-      // if(url.isEmpty)
-      //   {
-      //     userPhotoUrl = getUserImageUrl;
-      //   }else{
-      //   print(userPhotoUrl);
-      // }
     });
   }
 
-  Future <bool> showDialogForUpdateData(selectedUserId, oldName, oldNum, oldAbout, oldImgPro, width) async{
+  Future <bool> showDialogForUpdateData(selectedUserId, oldName, oldNum, oldAbout, oldImgPro, oldBusinessName, width) async{
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -122,29 +115,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         chooseImage();
                       },
                       child: CircleAvatar(
-
                         radius: width * 0.20,
                         backgroundColor: Colors.deepPurple[100],
                         backgroundImage: _image == null ? null : FileImage(_image),
                         child: _image == null
 
-                            ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              getUserImageUrl,
-                          ),
-
-                          radius: width * 0.20,
-                          backgroundColor: Colors.deepPurple[100],
+                            ? Icon(
                           //else show icon
-                          // Icons.add_photo_alternate,
-                          // size: width * 0.20,
-                          // color: Colors.white,
-
+                          Icons.add_photo_alternate,
+                          size: width * 0.20,
+                          color: Colors.white,
                         )
                             :null,
+                        )
+
                       ),
 
-                  ),
+
                   SizedBox(height: 15.0,),
 
                   TextFormField(
@@ -165,6 +152,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     onChanged: (value){
                       setState(() {
                         oldNum = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 5.0,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: getBusinessName == "" ? "Update Business Name Here" : getBusinessName,
+                    ),
+                    onChanged: (value){
+                      setState(() {
+                        oldBusinessName = value;
                       });
                     },
                   ),
@@ -214,6 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         'userName': oldName,
                         'userNumber': oldNum,
                         'about' : oldAbout,
+                        'businessName' : oldBusinessName,
                       };
 
                       FirebaseFirestore.instance.collection('users').doc(selectedUserId).update(userData).then((value){
@@ -229,6 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         'userName': oldName,
                         'userNumber': oldNum,
                         'about' : oldAbout,
+                        'businessName' : oldBusinessName,
                       };
 
                       FirebaseFirestore.instance.collection('users').doc(selectedUserId).update(userData).then((value){
@@ -291,6 +291,9 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
 
                 const SizedBox(height: 24),
+                buildBusinessName(),
+
+                const SizedBox(height: 24),
                 ProfileWidget(
                   imagePath: getUserImageUrl,
                   onClicked: () {
@@ -301,20 +304,20 @@ class _ProfilePageState extends State<ProfilePage> {
                         getUserNum,
                         getAbout,
                         getUserImageUrl,
+                        getBusinessName,
                         _screenWidth,
                     );
 
                   },
                 ),
 
+
+
                 const SizedBox(height: 24),
                 buildName(),
 
                 const SizedBox(height: 24),
                 Center(child: buildUpgradeButton()),
-
-                const SizedBox(height: 24),
-                NumbersWidget(),
 
                 const SizedBox(height: 48),
                 buildAbout(),
@@ -340,6 +343,24 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildUpgradeButton() => ButtonWidget(
     text: 'Verified ✅',
     onClicked: () {},
+  );
+
+  Widget buildBusinessName() => Container(
+    padding: EdgeInsets.symmetric(horizontal: 48),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Founder of $getBusinessName',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Bebas', letterSpacing: 2.0,),
+        ),
+        // const SizedBox(height: 16),
+        // Text(
+        //   getBusinessName ?? '',
+        //   style: TextStyle(fontSize: 16, height: 1.4),
+        // ),
+      ],
+    ),
   );
 
   Widget buildAbout() => Container(

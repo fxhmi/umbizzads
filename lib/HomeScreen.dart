@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:toast/toast.dart';
 import 'package:umbizz/Chats/chatlist.dart';
 import 'package:umbizz/SearchProduct.dart';
 import 'package:umbizz/Welcome/welcome_screen.dart';
@@ -195,7 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    //TODO: implement initstate
     super.initState();
     getUserAddress();
 
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.pushReplacement(context, newRoute);
 
                               },
-                              child: Text(items.docs[i].get('userName') ?? '')
+                              child: Text(items.docs[i].get('businessName') ?? '')
                             ),
 
                             // update ads delete ads, if user is the owner of ads
@@ -452,18 +452,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Icon(Icons.search, color: Colors.white),
               ),
             ),
-            TextButton(
-              onPressed: (){
-                auth.signOut().then((_){
-                  Route newRoute = MaterialPageRoute(builder: (_) => AnimationTest());
-                  Navigator.pushReplacement(context, newRoute);
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Icon(Icons.notifications_active, color: Colors.white),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: (){
+            //     auth.signOut().then((_){
+            //       Route newRoute = MaterialPageRoute(builder: (_) => AnimationTest());
+            //       Navigator.pushReplacement(context, newRoute);
+            //     });
+            //   },
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(10.0),
+            //     child: Icon(Icons.notifications_active, color: Colors.white),
+            //   ),
+            // ),
           ],
           //linear gradient perpose
           flexibleSpace: Container(
@@ -671,12 +671,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
           //redirect user to Page
           onPressed: (){
-            Route newRoute = MaterialPageRoute(builder: (_) => UploadAdScreen());
-            Navigator.pushReplacement(context, newRoute);
+            if(getBusinessName != ""){
+              Route newRoute = MaterialPageRoute(builder: (_) => UploadAdScreen());
+              Navigator.pushReplacement(context, newRoute);
+            } else {
+              showToast(
+                "Please update your Business Name at Profile Page to proceed.",
+                duration: 3,
+                gravity: Toast.BOTTOM,
+              );
+            }
+
 
           },
         ),
       ),
     );
+  }
+
+  void showToast(String msg, {int duration, int gravity}){
+    Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 }

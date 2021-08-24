@@ -25,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String itemColor;
   String itemModel;
   String description;
+  String businessName;
   QuerySnapshot items;
 
 
@@ -223,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: (){
 
                         },
-                        child: Text(items.docs[i].get('userName') ?? '')
+                        child: Text(items.docs[i].get('businessName') ?? '')
                     ),
 
                     // update ads delete ads, if user is the owner of ads
@@ -368,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             _buildUserImage(),
             SizedBox(width: 10,),
-            Text(adUserName),
+            Text("$adUserName { Founder }"),
           ],
         ),
         flexibleSpace: Container(

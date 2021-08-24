@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toast/toast.dart';
 import 'package:umbizz/DialogBox/errorDialog.dart';
 import 'package:umbizz/DialogBox/loadingDialog.dart';
 import 'package:umbizz/Login/login_screen.dart';
@@ -123,13 +124,12 @@ class _SignupBodyState extends State<SignupBody> {
       'time': DateTime.now(),
       'status': "approved",
       'about': "Update your about",
-      'businessName': "Update business name",
+      'businessName': "",
       'email': userEmail,
-      'nameChatId': userEmail.replaceAll("@gmail.com", "")
+      'nameChatId': userEmail.replaceAll("@siswa.um.my", "")
     };
 
     FirebaseFirestore.instance.collection('users').doc(userId).set(userData);
-
     //take user id to get all other data
   }
 
@@ -159,7 +159,7 @@ class _SignupBodyState extends State<SignupBody> {
                 child: CircleAvatar(
                   radius: _screenWidth * 0.20,
                   backgroundColor: Colors.deepPurple[100],
-                  backgroundImage: _image==null?null:FileImage(_image),
+                  backgroundImage: _image==null ? null : FileImage(_image),
                   child: _image == null
                   ? Icon(
                     //else show icon
@@ -208,7 +208,15 @@ class _SignupBodyState extends State<SignupBody> {
                 text: "SIGN UP",
                 press: ()
                 {
-                  upload();
+                  if(_nameController.text != "" && _emailController.text != "" && _phoneController.text != "" && _passwordController.text != "" && _image != null) {
+                      upload();
+                    } else {
+                    showToast(
+                      "Please Insert Valid Credentials to Proceed",
+                      duration: 3,
+                      gravity: Toast.BOTTOM,
+                    );
+                  }
                 },
               ),
               SizedBox(height: _screenHeight * 0.03,),
@@ -232,5 +240,9 @@ class _SignupBodyState extends State<SignupBody> {
         ),
       ),
     );
+  }
+
+  void showToast(String msg, {int duration, int gravity}){
+    Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 }

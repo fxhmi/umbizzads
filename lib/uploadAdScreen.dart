@@ -66,7 +66,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
         title: Text(
           //default next is false, then after user enter 5 pic it turned to yes
           next ? "Please write Item's Info" : 'Choose 5 Item Images',
-          style: TextStyle(fontSize: 18.0, fontFamily: "Varela", letterSpacing: 2.0),
+          style: TextStyle(fontSize: 18.0, fontFamily: "Bebas", letterSpacing: 2.0),
         ),
         actions: [
           next ? Container() :
@@ -88,7 +88,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                   },
                 child: Text(
                   'Next',
-                  style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "Varela"),
+                  style: TextStyle(fontSize: 18.0, color: Colors.white, fontFamily: "Bebas"),
                 ),
               ),
         ],
@@ -157,7 +157,9 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                 width: MediaQuery.of(context).size.width*0.5,
                 child: ElevatedButton(
                   onPressed: (){
-                    showDialog(context: context, builder: (con){
+                    if(this.itemModel != "" && this.itemColor != "" && this.itemPrice != "" && this.description != "") {
+
+                      showDialog(context: context, builder: (con){
                       return LoadingAlertDialog(
                         message: 'Uploading...',
                       );
@@ -184,6 +186,8 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                         'time': DateTime.now(),
                         'status': "not approved",
                         'address': completeAddress,
+                        'nameChatId': getNameChatId,
+                        'businessName': getBusinessName,
                       };
 
                       FirebaseFirestore.instance.collection('items').add(adData).then((value){
@@ -194,8 +198,16 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                       });
 
                     });
-
+                    } else {
+                      showToast(
+                      "Please Fill In the Details",
+                      duration: 2,
+                      gravity: Toast.BOTTOM,
+                      );
+                    }
                   },
+
+
 
                   child: Text('Upload', style: TextStyle(color: Colors.white),),
                 ),
@@ -326,7 +338,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
 
   @override
   void initState(){
-    //TODO: implement initstate
     super.initState();
     imgRef = FirebaseFirestore.instance.collection('imageUrls');
 

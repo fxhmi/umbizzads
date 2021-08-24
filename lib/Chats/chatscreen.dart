@@ -29,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
     myEmail = userEmail;
     myUid = getUserId;
 
-    print("woi apa yang salah $this.chatWithUsername and $myUserName");
+    //print("apa yang salah $this.chatWithUsername and $myUserName");
     chatRoomId = getChatRoomIdByUsernames(widget.chatWithUsername, myUserName);
   }
 
@@ -46,6 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
       String message = messageTextEdittingController.text;
 
       var lastMessageTs = DateTime.now();
+
 
       Map<String, dynamic> messageInfoMap = {
         "message": message,
@@ -67,7 +68,6 @@ class _ChatScreenState extends State<ChatScreen> {
           "lastMessage": message,
           "lastMessageSendTs": lastMessageTs,
           "lastMessageSendBy": myUserName
-
         };
 
         DatabaseMethods().updateLastMessageSend(chatRoomId, lastMessageInfoMap);
@@ -100,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   bottomLeft:
                   sendByMe ? Radius.circular(24) : Radius.circular(0),
                 ),
-                color: sendByMe ? Colors.blue : Color(0xfff1f0f0),
+                color: sendByMe ? Colors.blueAccent : Color(0xfff1f0f0),
               ),
               padding: EdgeInsets.all(16),
               child: Text(
@@ -160,6 +160,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 MaterialPageRoute(builder: (context) => ChatList()),
               );
             }
+        ),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                Colors.deepPurple[300],
+                Colors.blue,
+
+                // Colors.lightBlueAccent,
+                // Colors.blueAccent,
+
+                // Colors.blueGrey,
+                // Colors.grey,
+              ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+            ),
+          ),
         ),
       ),
       body: Container(

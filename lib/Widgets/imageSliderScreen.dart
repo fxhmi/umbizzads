@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_slider/image_slider.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:umbizz/Chats/chatscreen.dart';
 import 'package:umbizz/HomeScreen.dart';
+import 'package:umbizz/Services/chat_database.dart';
 import 'package:umbizz/globalVar.dart';
 
 class ImageSliderScreen extends StatefulWidget {
@@ -46,6 +48,8 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> with SingleTicker
     tabController = TabController(length: links.length, vsync: this);
   }
 
+
+
   getLinks()
   {
     links.add(widget.urlImage1);
@@ -53,6 +57,14 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> with SingleTicker
     links.add(widget.urlImage3);
     links.add(widget.urlImage4);
     links.add(widget.urlImage5);
+  }
+
+  getChatRoomIdByUsernames(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
   }
 
   @override
@@ -234,6 +246,26 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> with SingleTicker
                     child: Text('Check Seller Location'),
                     onPressed: (){
                       MapsLauncher.launchCoordinates(widget.lat, widget.lng);
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 5,),
+              Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(width: 368,),
+                  child: ElevatedButton(
+                    child: Text('Chat Seller'),
+                    onPressed: (){
+                      // var chatRoomId = getChatRoomIdByUsernames(myUserName, nameChatId);
+                      // Map<String, dynamic> chatRoomInfoMap = {
+                      //   "users": [myUserName, nameChatId]
+                      // };
+                      // DatabaseMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => ChatScreen(nameChatId, userName)));
                     },
                   ),
                 ),
