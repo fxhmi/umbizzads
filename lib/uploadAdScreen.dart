@@ -10,6 +10,7 @@ import 'package:umbizz/DialogBox/loadingDialog.dart';
 import 'package:umbizz/HomeScreen.dart';
 import 'package:umbizz/globalVar.dart';
 import 'package:path/path.dart' as Path;
+import 'package:flutter/cupertino.dart';
 
 
 class UploadAdScreen extends StatefulWidget {
@@ -38,7 +39,15 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
   String itemModel= "";
   String description= "";
   String itemColor="";
-  String urlImages;
+  String urlImages="";
+  String category="";
+  String dropdownValue = 'Clothing';
+
+  ///list of item to show in flutter drop down
+   //static final data = ['Clothing', 'Shoes', 'Electronics', 'Food', 'Personal Care','Software','Entertainments','Sports & Outdoors','Automotive','Baby & Toddler'];
+  // String initial = data.first.toString();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +126,42 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
               //     this.userNumber = value;
               //   },
               // ),
+              //
+            SizedBox(height: 5.0,),
+            Text("Select Categories", style: TextStyle(fontSize: 15),),
+            DropdownButton<String>(
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_downward),
+              iconSize: 20,
+              elevation: 16,
+              style: const TextStyle(
+                  color: Colors.deepPurple
+              ),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  this.dropdownValue = newValue;
+                });
+              },
+              items: <String>['Clothing', 'Shoes', 'Electronics', "Book", 'Food', 'Self-care','Software','Entertainment','Sportswear','Automotive','Baby','Others']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              })
+                  .toList(),
+            ),
+
 
 
 
               SizedBox(height: 5.0),
               TextField(
-                decoration: InputDecoration(hintText: 'Enter Your Item Model'),
+                decoration: InputDecoration(hintText: 'Enter Your Item Name'),
                 onChanged: (value){
                   this.itemModel = value;
                 },
@@ -188,7 +227,21 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                         'address': completeAddress,
                         'nameChatId': getNameChatId,
                         'businessName': getBusinessName,
+                        'category': dropdownValue,
+                        'sold': "false"
                       };
+
+
+                      ///add category to database with count color indicator here
+                      Map <String,dynamic> catData = {
+                        'adsVal': FieldValue.increment(1),
+                      };
+
+                      FirebaseFirestore.instance.collection('categories').doc(dropdownValue).update(catData).then((value){
+                        print("Data updated successfully with profile page");
+                      }).catchError((onError){
+                        print(onError);
+                      });
 
                       FirebaseFirestore.instance.collection('items').add(adData).then((value){
                         print("Data added successfully!");
@@ -196,7 +249,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                       }).catchError((onError){
                         print(onError);
                       });
-
                     });
                     } else {
                       showToast(
@@ -239,7 +291,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                   //if index equal to 0 then show center
                   return index == 0
                       ? Center(
-                    child: IconButton(
+                        child: IconButton(
                         icon: Icon(Icons.add),
                         onPressed: () =>
                       //if uploading else choose image
@@ -340,16 +392,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
   void initState(){
     super.initState();
     imgRef = FirebaseFirestore.instance.collection('imageUrls');
-
-
-    // FirebaseFirestore.instance.collection("users")
-    //     .where("imgPro")
-    //     .get().then((result)
-    // {
-    //   db = result;
-    // });
-
-    //FirebaseFirestore.instance.collection('users').snapshots();
   }
 
 

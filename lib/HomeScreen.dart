@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:toast/toast.dart';
+import 'package:umbizz/BusinessHub/article_list.dart';
+import 'package:umbizz/BusinessHub/create_article.dart';
+import 'package:umbizz/Charts/category_piechart.dart';
 import 'package:umbizz/Chats/chatlist.dart';
 import 'package:umbizz/SearchProduct.dart';
+import 'package:umbizz/Theme/sold_color_filter.dart';
 import 'package:umbizz/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:umbizz/Widgets/imageSliderScreen.dart';
@@ -44,29 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                // TextFormField(
-                //   initialValue: oldUserName,
-                //   decoration: InputDecoration(
-                //     hintText: 'Enter your new name',
-                //   ),
-                //   onChanged: (value){
-                //     setState(() {
-                //       oldUserName = value;
-                //     });
-                //   },
-                // ),
-                // SizedBox(height: 5.0,),
-                // TextFormField(
-                //   initialValue: oldPhoneNumber,
-                //   decoration: InputDecoration(
-                //     hintText: 'Enter your new phone no.',
-                //   ),
-                //   onChanged: (value){
-                //     setState(() {
-                //       oldPhoneNumber = value;
-                //     });
-                //   },
-                // ),
+
 
                 SizedBox(height: 5.0,),
                 TextFormField(
@@ -288,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                             // update ads delete ads, if user is the owner of ads
-                            trailing: items.docs[i].get('uid') == userId ?
+                            trailing: items.docs[i].get('uid') == userId && items.docs[i].get('sold') == "false" ?
                             Row(
                               mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -347,18 +329,69 @@ class _HomeScreenState extends State<HomeScreen> {
                           ));
                           //whenever click to image it will redirect to imagesliderscreen with the data
                           Navigator.pushReplacement(context, newRoute);
+                          setState(() {});
                         },
+
                         child: Padding(
+
                           //show a pic first
                           padding: const EdgeInsets.all(16.0),
-                          child: Image.network(
-                            items.docs[i].get('urlImage1'),
-                            errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                              return Text('Your error widget...');
-                            },
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+
+                          child: items.docs[i].get('sold') == "false" ?
+                              Image.network(
+                                items.docs[i].get('urlImage1'),
+                                errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                                  return Text('Your error widget...');
+                                },
+                                fit: BoxFit.fill,
+                              ) : Stack(
+                                alignment: Alignment.center,
+                                children: [
+
+                                  Container(
+                                    child: Padding(
+                                      //show a pic first
+                                      padding: const EdgeInsets.all(9.0),
+                                      child: Ink.image(
+                                        image: NetworkImage(
+                                          items.docs[i].get('urlImage1'),
+                                          // errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                                          //   return Text('Your error widget...');
+                                          // },
+                                          // fit: BoxFit.fill,
+                                        ),
+                                        colorFilter: ColorFilters.greyscale,
+                                        child: InkWell(
+                                          onTap: () {},
+                                        ),
+                                        height: 240,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(28),
+
+                                      gradient: LinearGradient(
+                                        colors: [Colors.black87, Colors.black],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'SOLD',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          )
                       ),
 
                       //item price
@@ -613,13 +646,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 title: Text('Business Education'),
                 onTap: () {
-                    auth.signOut().then((_){
-                    Route newRoute = MaterialPageRoute(builder: (_) => WelcomeScreen());
+                    Route newRoute = MaterialPageRoute(builder: (_) => ArticleList());
                     Navigator.pushReplacement(context, newRoute);
-                  });
                 },
 
               ),
+
+              Divider(),
+              ListTile(
+                leading: Icon(
+                  Icons.analytics_sharp,
+                  color: Colors.blueAccent,
+                  size: 29.0,
+                ),
+
+                title: Text('Financial Report'),
+                onTap: () {
+                  Route newRoute = MaterialPageRoute(builder: (_) => TaskHomePage());
+                  Navigator.pushReplacement(context, newRoute);
+                },
+
+              ),
+
               Divider(),
               ListTile(
                 leading: Icon(
@@ -692,4 +740,5 @@ class _HomeScreenState extends State<HomeScreen> {
   void showToast(String msg, {int duration, int gravity}){
     Toast.show(msg, context, duration: duration, gravity: gravity);
   }
+
 }

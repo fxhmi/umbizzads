@@ -126,7 +126,10 @@ class _SignupBodyState extends State<SignupBody> {
       'about': "Update your about",
       'businessName': "",
       'email': userEmail,
-      'nameChatId': userEmail.replaceAll("@siswa.um.my", "")
+      'nameChatId': userEmail.replaceAll("@siswa.um.edu.my", ""),
+      'spend': "0",
+      'income': "0",
+      'report': ""
     };
 
     FirebaseFirestore.instance.collection('users').doc(userId).set(userData);
@@ -138,6 +141,9 @@ class _SignupBodyState extends State<SignupBody> {
 
     double _screenWidth = MediaQuery.of(context).size.width,
     _screenHeight = MediaQuery.of(context).size.width;
+
+    int defaultEmailLength = "wie180024@siswa.um.edu.my".length;
+    String defaultDomain = "@siswa.um.edu.my";
 
     return Container(
       decoration: BoxDecoration(
@@ -208,14 +214,20 @@ class _SignupBodyState extends State<SignupBody> {
                 text: "SIGN UP",
                 press: ()
                 {
-                  if(_nameController.text != "" && _emailController.text != "" && _phoneController.text != "" && _passwordController.text != "" && _image != null) {
-                      upload();
-                    } else {
+                  if(_nameController.text == "" && _emailController.text == "" && _phoneController.text == "" && _passwordController.text == "" && _image == null) {
                     showToast(
                       "Please Insert Valid Credentials to Proceed",
                       duration: 3,
                       gravity: Toast.BOTTOM,
                     );
+                    } else if (_emailController.text.length != defaultEmailLength && _emailController.text.substring(9,_emailController.text.length) != defaultDomain ){
+                    showToast(
+                      "Please use non-existing Siswamail account to proceed",
+                      duration: 3,
+                      gravity: Toast.BOTTOM,
+                    );
+                    } else {
+                    upload();
                   }
                 },
               ),

@@ -2,7 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:random_string/random_string.dart';
+import 'package:toast/toast.dart';
 import 'package:umbizz/HomeScreen.dart';
+import 'package:umbizz/Theme/sold_color_filter.dart';
 import 'package:umbizz/Widgets/imageSliderScreen.dart';
 import 'package:umbizz/globalVar.dart';
 import 'package:timeago/timeago.dart' as tAgo;
@@ -19,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  final DocumentReference docRef = FirebaseFirestore.instance.collection("users").doc(getUserId);
   String userName;
   String userNumber;
   String itemPrice;
@@ -26,11 +30,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String itemModel;
   String description;
   String businessName;
+  String report;
+  String reportMessageId;
   QuerySnapshot items;
 
 
+  Future <bool> showDialogReport(reporterId, sellerId) async {
+    return showDialog(
+        context: context,
+        builder:(BuildContext context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text("Report this account?", style: TextStyle(fontSize: 24, fontFamily: 'Bebas', letterSpacing: 2.0),),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+
+                  SizedBox(height: 5.0,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Please describe the issue',
+                    ),
+                    onChanged: (value){
+                      setState(() {
+                        report = value;
+                      });
+                    },
+                  ),
+
+                ],
+              ),
+              //cancel button
+              actions: [
+                ElevatedButton(
+                  onPressed: ()
+                  {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                      "Cancel"
+                  ),
+                ),
+                ElevatedButton(
+                  child: Text(
+                      "Report"
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+
+                    Map<String, dynamic> userData = {
+                      //'reportVal': FieldValue.increment(1),
+                      'reportMessage': report,
+                      'reportSendById': reporterId,
+                      'reportSendAt': DateTime.now(),
+                    };
+
+
+                    if (reportMessageId == "") {
+                      reportMessageId = randomAlphaNumeric(12);
+                    }
+
+                    showToast(
+                      "Report sent successfully!",
+                      duration: 3,
+                      gravity: Toast.BOTTOM,
+                    );
+
+                    FirebaseFirestore.instance.collection('users').doc(sellerId).collection("report").doc(reportMessageId).set(userData).then((value){
+                      print("Report send successfully.");
+                    }).catchError((onError){
+                      print(onError);
+                    });
+
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+  void showToast(String msg, {int duration, int gravity}){
+    Toast.show(msg, context, duration: duration, gravity: gravity);
+  }
+
+  Future <bool> showDialogSold(selectedDoc, userId, itemPrice) async {
+    return showDialog(
+        context: context,
+        builder:(BuildContext context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text("Mark As Sold?", style: TextStyle(fontSize: 24, fontFamily: 'Bebas', letterSpacing: 2.0),),
+              content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+
+                SizedBox(height: 5.0,),
+                TextFormField(
+                initialValue: "@",
+                decoration: InputDecoration(
+                  hintText: 'Enter buyer ID',
+                ),
+                onChanged: (value){
+                  // setState(() {
+                  //   buyer = value;
+                  // });
+                },
+              ),
+
+                ],
+              ),
+              //cancel button
+              actions: [
+                ElevatedButton(
+                  onPressed: ()
+                  {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                      "Cancel"
+                  ),
+                ),
+                ElevatedButton(
+                  child: Text(
+                      "Sold"
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                    
+                    docRef.update({"income": FieldValue.increment(itemPrice)});
+
+                    //update database
+                    Map<String, dynamic> itemData = {
+                      'sold': "true",
+                    };
+
+                    FirebaseFirestore.instance.collection('items').doc(selectedDoc).update(itemData).then((value){
+                      print("Data item updated successfully.");
+                    }).catchError((onError){
+                      print(onError);
+                    });
+
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
   //update ads
-  Future <bool> showDialogForUpdateData(selectedDoc) async{
+  Future <bool> showDialogForUpdateData(selectedDoc, oldUserName, oldPhoneNumber, oldItemPrice, oldItemName, oldItemColor, oldItemDescription) async{
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -41,70 +193,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // TextFormField(
-                  //   decoration: InputDecoration(
-                  //     hintText: 'Enter your new name',
-                  //   ),
-                  //   onChanged: (value){
-                  //     setState(() {
-                  //       this.userName = value;
-                  //     });
-                  //   },
-                  // ),
-                  // SizedBox(height: 5.0,),
-                  // TextFormField(
-                  //   decoration: InputDecoration(
-                  //     hintText: 'Enter your new phone no.',
-                  //   ),
-                  //   onChanged: (value){
-                  //     setState(() {
-                  //       this.userNumber = value;
-                  //     });
-                  //   },
-                  // ),
-                  SizedBox(height: 5.0,),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter your new item name',
-                    ),
-                    onChanged: (value){
-                      setState(() {
-                        this.itemModel = value;
-                      });
-                    },
-                  ),
 
                   SizedBox(height: 5.0,),
                   TextFormField(
+                    initialValue: oldItemName,
                     decoration: InputDecoration(
-                      hintText: 'Enter your new price',
+                      hintText: 'Enter your new item model',
                     ),
                     onChanged: (value){
                       setState(() {
-                        this.itemPrice = value;
+                        oldItemName = value;
                       });
                     },
                   ),
-
                   SizedBox(height: 5.0,),
                   TextFormField(
+                    initialValue: oldItemColor,
                     decoration: InputDecoration(
                       hintText: 'Enter your new item color',
                     ),
                     onChanged: (value){
                       setState(() {
-                        this.itemColor = value;
+                        oldItemColor = value;
                       });
                     },
                   ),
                   SizedBox(height: 5.0,),
                   TextFormField(
+                    initialValue: oldItemPrice,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your new price',
+                    ),
+                    onChanged: (value){
+                      setState(() {
+                        oldItemPrice = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldItemDescription,
                     decoration: InputDecoration(
                       hintText: 'Enter your new description',
                     ),
                     onChanged: (value){
                       setState(() {
-                        this.description = value;
+                        oldItemDescription = value;
                       });
                     },
                   ),
@@ -131,12 +265,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     //update database
                     Map<String, dynamic> itemData = {
-                      // 'userName': this.userName,
-                      // 'userNumber': this.userNumber,
-                      'itemPrice' : this.itemPrice,
-                      'itemModel': this.itemModel,
-                      'itemColor': this.itemColor,
-                      'description': this.description,
+                      'userName': oldUserName,
+                      'userNumber': oldPhoneNumber,
+                      'itemPrice' : oldItemPrice,
+                      'itemModel': oldItemName,
+                      'itemColor': oldItemColor,
+                      'description': oldItemDescription,
                     };
 
                     FirebaseFirestore.instance.collection('items').doc(selectedDoc).update(itemData).then((value){
@@ -186,6 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             items = results;
             adUserName = items.docs[0].get('userName');
             adUserImageUrl = items.docs[0].get('imgPro');
+            adUserId = items.docs[0].get('uid');
           });
     });
   }
@@ -228,18 +363,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     // update ads delete ads, if user is the owner of ads
-                    trailing: items.docs[i].get('uid') == userId ?
+                    trailing: items.docs[i].get('uid') == userId && items.docs[i].get('sold') == "false" ?
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         GestureDetector(
                           onTap: (){
                             if(items.docs[i].get("uid") == userId){
-                              showDialogForUpdateData(items.docs[i].id);
+                              showDialogForUpdateData(
+                                items.docs[i].id,
+                                items.docs[i].get('userName'),
+                                items.docs[i].get('userNumber'),
+                                items.docs[i].get('itemPrice'),
+                                items.docs[i].get('itemModel'),
+                                items.docs[i].get('itemColor'),
+                                items.docs[i].get('description'),
+                              );
                             }
                           },
                           child: Icon(Icons.edit_outlined,),
                         ),
+
                         SizedBox(width: 20,),
                         GestureDetector(
                           //delete items
@@ -250,6 +394,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           },
                           child: Icon(Icons.delete_forever_sharp),
+                        ),
+
+                        SizedBox(width: 20,),
+                        GestureDetector(
+                          onTap: (){
+                            if(items.docs[i].get("uid") == userId && items.docs[i].get("sold") == "true"){
+                              showDialogSold(
+                                items.docs[i].id,
+                                items.docs[i].get('uid'),
+                                items.docs[i].get('itemPrice')
+                              );
+                            }
+                          },
+                          child: Icon(Icons.receipt_long,),
                         ),
                       ],
 
@@ -280,17 +438,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //whenever click to image it will redirect to imagesliderscreen with the data
                     Navigator.pushReplacement(context, newRoute);
                   },
-                  child: Padding(
-                    //show a pic first
-                    padding: const EdgeInsets.all(16.0),
-                    child: Image.network(
-                      items.docs[i].get('urlImage1'),
-                      errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                        return Text('Your error widget...');
-                      },
-                      fit: BoxFit.fill,
+
+                    child: Padding(
+
+                      //show a pic first
+                      padding: const EdgeInsets.all(16.0),
+
+                      child: items.docs[i].get('sold') == "false" ?
+                      Image.network(
+                        items.docs[i].get('urlImage1'),
+                        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                          return Text('Your error widget...');
+                        },
+                        fit: BoxFit.fill,
+                      ) : Stack(
+                        alignment: Alignment.center,
+                        children: [
+
+                          Container(
+                            child: Padding(
+                              //show a pic first
+                              padding: const EdgeInsets.all(9.0),
+                              child: Ink.image(
+                                image: NetworkImage(
+                                  items.docs[i].get('urlImage1'),
+                                  // errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                                  //   return Text('Your error widget...');
+                                  // },
+                                  // fit: BoxFit.fill,
+                                ),
+                                colorFilter: ColorFilters.greyscale,
+                                child: InkWell(
+                                  onTap: () {},
+                                ),
+                                height: 240,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+
+                              gradient: LinearGradient(
+                                colors: [Colors.black87, Colors.black],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            child: Text(
+                              'SOLD',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+
                 ),
 
                 //item price
@@ -346,13 +555,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       );
     } else {
-      return Text("Loading ...");
+      return Text("No Ads Posted!", textAlign: TextAlign.center,);
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getResults();
   }
@@ -365,12 +573,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: _buildBackButton(),
+        actions: <Widget>[
+          TextButton(
+              onPressed: (){
+                if(getUserName !=  adUserName){
+                  showDialogReport(
+                      getUserId,
+                      adUserId,
+                  );
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Icon(Icons.report_rounded, color: Colors.white),
+              ),
+          ),
+        ],
         title: Row(
-          children: [
-            _buildUserImage(),
-            SizedBox(width: 10,),
-            Text("$adUserName { Founder }"),
-          ],
+            children: [
+              _buildUserImage(),
+              Expanded(
+              flex: 1,
+              child: Text("$adUserName { Founder }"),
+              ),
+            ],
         ),
         flexibleSpace: Container(
           decoration: new BoxDecoration(

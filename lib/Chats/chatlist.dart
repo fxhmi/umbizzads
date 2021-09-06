@@ -127,12 +127,6 @@ class _ChatListState extends State<ChatList> {
                   userName: ds['userName'],
                   nameChatId: ds['nameChatId'],
                   email: ds['email'],
-
-
-                // profileUrl: ds['imgPro'],
-                // name: ds['userName'],
-                // email: ds['email'],
-                // username: ds['userName']
             );
           },
         ) : Center(
@@ -302,7 +296,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
-        child: profilePicUrl == "" ? CircularProgressIndicator()
+        child: profilePicUrl == "" ? Container()
         : Row(
           children: [
             ClipRRect(

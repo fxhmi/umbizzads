@@ -115,8 +115,6 @@ class _SearchProductState extends State<SearchProduct> {
   }
 
 
-
-
   @override
   Widget build(BuildContext context) {
     double _screenWidth = MediaQuery
@@ -143,7 +141,7 @@ class _SearchProductState extends State<SearchProduct> {
                     child: ListTile(
                       leading: GestureDetector(
                         onTap: (){
-                          Route newRoute = MaterialPageRoute(builder: (_) => ProfileScreen(sellerId: items.docs[i].get('uId'),));
+                          Route newRoute = MaterialPageRoute(builder: (_) => ProfileScreen(sellerId: items.docs[i].get('uid'),));
                           Navigator.pushReplacement(context, newRoute);
                         },
                         child: Container(
@@ -160,7 +158,7 @@ class _SearchProductState extends State<SearchProduct> {
                       ),
                       title: GestureDetector(
                           onTap: (){
-                            Route newRoute = MaterialPageRoute(builder: (_) => ProfileScreen(sellerId: items.docs[i].get('uId'),));
+                            Route newRoute = MaterialPageRoute(builder: (_) => ProfileScreen(sellerId: items.docs[i].get('uid'),));
                             Navigator.pushReplacement(context, newRoute);
                           },
                           child: Text(items.docs[i].get('userName'))

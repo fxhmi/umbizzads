@@ -97,6 +97,15 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future <bool> showDialogForReport(selectedUserId) async{
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+
+        }
+    );
+  }
+
   Future <bool> showDialogForUpdateData(selectedUserId, oldName, oldNum, oldAbout, oldImgPro, oldBusinessName, width) async{
     return showDialog(
         context: context,

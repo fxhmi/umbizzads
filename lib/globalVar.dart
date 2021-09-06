@@ -12,6 +12,8 @@ bool isDarkMode = true;
 String getAbout = "";
 String getUserId = "";
 String getNameChatId = "";
+
+String adUserId = "";
 String adUserName = "";
 String adUserImageUrl = "";
 String getBusinessName= "";
