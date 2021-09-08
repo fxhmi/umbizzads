@@ -125,21 +125,21 @@ class _ArticleListState extends State<ArticleList> {
       body: BlogsList(),
 
       /// admin module
-      // floatingActionButton: Container(
-      //   padding: EdgeInsets.symmetric(vertical: 20),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       FloatingActionButton(
-      //         onPressed: () {
-      //           Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => CreateBlog()));
-      //         },
-      //         child: Icon(Icons.add),
-      //       )
-      //     ],
-      //   ),
-      // ),
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CreateBlog()));
+              },
+              child: Icon(Icons.add),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

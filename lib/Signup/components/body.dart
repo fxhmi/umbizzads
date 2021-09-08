@@ -127,14 +127,39 @@ class _SignupBodyState extends State<SignupBody> {
       'businessName': "",
       'email': userEmail,
       'nameChatId': userEmail.replaceAll("@siswa.um.edu.my", ""),
-      'spend': "0",
-      'income': "0",
-      'report': ""
     };
 
     FirebaseFirestore.instance.collection('users').doc(userId).set(userData);
     //take user id to get all other data
-  }
+
+    Map<String, dynamic> incomeData = {
+      //'reportVal': FieldValue.increment(1),
+      'income': "0",
+      'details': "income",
+      'colorVal': "0xff29ab87",
+      'timeUpdated': DateTime.now(),
+    };
+
+    FirebaseFirestore.instance.collection('users').doc(userId).collection("finance").doc("income").set(incomeData).then((value){
+      print("income initialized successfully.");
+    }).catchError((onError){
+      print(onError);
+    });
+
+    Map<String, dynamic> spendData = {
+      //'reportVal': FieldValue.increment(1),
+      'spend': "0",
+      'details': "spend",
+      'colorVal': "0xffee204d",
+      'timeUpdated': DateTime.now(),
+    };
+
+    FirebaseFirestore.instance.collection('users').doc(userId).collection("finance").doc("spend").set(spendData).then((value){
+      print("spend initialized successfully.");
+    }).catchError((onError){
+      print(onError);
+    });
+    }
 
   @override
   Widget build(BuildContext context) {

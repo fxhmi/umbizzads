@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:umbizz/HomeScreen.dart';
@@ -14,19 +15,24 @@ class TaskHomePage extends StatefulWidget {
 }
 
 class _TaskHomePageState extends State<TaskHomePage> {
-  List<charts.Series<Ads, String>> _seriesPieData;
-  List<Ads> mydata;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
-  _generateData(mydata) {
-    _seriesPieData = List<charts.Series<Ads, String>>();
+  List<charts.Series<Ads, String>> _seriesPieData;
+  List<Ads> myData;
+
+  _generateData(myData) {
+    _seriesPieData = List<charts.Series<Ads, String>>().cast<charts.Series<Ads, String>>();
     _seriesPieData.add(
       charts.Series(
-        domainFn: (Ads task, _) => task.adsDetail,
-        measureFn: (Ads task, _) => task.adsVal,
+        //x value
+        domainFn: (Ads task, _) => task.adsDetails,
+
+        //y value
+        measureFn: (Ads task, _) => int.parse(task.adsVal),
         colorFn: (Ads task, _) =>
-            charts.ColorUtil.fromDartColor(Color(int.parse(task.colorVal))),
-        id: 'tasks',
-        data: mydata,
+             charts.ColorUtil.fromDartColor(Color(int.parse(task.colorVal))),
+        id: 'categories',
+        data: myData,
         labelAccessorFn: (Ads row, _) => "${row.adsVal}",
       ),
     );
@@ -36,12 +42,12 @@ class _TaskHomePageState extends State<TaskHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tasks'),
+        title: Text('Data Analytics'),
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
               colors: [
-                Colors.deepPurple[300],
+                Colors.deepPurple,
                 Colors.blue,
 
                 // Colors.lightBlueAccent,
@@ -60,10 +66,6 @@ class _TaskHomePageState extends State<TaskHomePage> {
             onPressed: () {
               Route newRoute = MaterialPageRoute(builder: (_) => HomeScreen());
               Navigator.pushReplacement(context, newRoute);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => HomeScreen()),
-              // );
             }
         ),
       ),
@@ -73,7 +75,7 @@ class _TaskHomePageState extends State<TaskHomePage> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('task').snapshots(),
+      stream: FirebaseFirestore.instance.collection('categories').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LinearProgressIndicator();
@@ -86,22 +88,23 @@ class _TaskHomePageState extends State<TaskHomePage> {
       },
     );
   }
+
   Widget _buildChart(BuildContext context, List<Ads> taskdata) {
-    mydata = taskdata;
-    _generateData(mydata);
+    myData = taskdata;
+    _generateData(myData);
+
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
         child: Center(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 10.0,),
               Text(
-                'Popular Uploaded Categories',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                'Popular Upload by Categories',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                height: 10.0,
-              ),
+              SizedBox(height: 10.0,),
               Expanded(
                 child: charts.PieChart(_seriesPieData,
                     animate: true,
@@ -111,13 +114,13 @@ class _TaskHomePageState extends State<TaskHomePage> {
                         outsideJustification:
                         charts.OutsideJustification.endDrawArea,
                         horizontalFirst: false,
-                        desiredMaxRows: 2,
+                        desiredMaxRows: 4,
                         cellPadding:
-                        new EdgeInsets.only(right: 4.0, bottom: 4.0,top:4.0),
+                        new EdgeInsets.only(left: 8.0,right: 4.0, bottom: 4.0,top:4.0),
                         entryTextStyle: charts.TextStyleSpec(
                             color: charts.MaterialPalette.purple.shadeDefault,
                             fontFamily: 'Georgia',
-                            fontSize: 18),
+                            fontSize: 15),
                       )
                     ],
                     defaultRenderer: new charts.ArcRendererConfig(
@@ -125,7 +128,8 @@ class _TaskHomePageState extends State<TaskHomePage> {
                         arcRendererDecorators: [
                           new charts.ArcLabelDecorator(
                               labelPosition: charts.ArcLabelPosition.inside)
-                        ])),
+                        ])
+                ),
               ),
             ],
           ),

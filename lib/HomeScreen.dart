@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:toast/toast.dart';
 import 'package:umbizz/BusinessHub/article_list.dart';
 import 'package:umbizz/BusinessHub/create_article.dart';
+import 'package:umbizz/Charts/bar_chart_homepage.dart';
 import 'package:umbizz/Charts/category_piechart.dart';
 import 'package:umbizz/Chats/chatlist.dart';
 import 'package:umbizz/SearchProduct.dart';
@@ -662,7 +663,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 title: Text('Financial Report'),
                 onTap: () {
-                  Route newRoute = MaterialPageRoute(builder: (_) => TaskHomePage());
+                  Route newRoute = MaterialPageRoute(builder: (_) => SalesHomePage());
                   Navigator.pushReplacement(context, newRoute);
                 },
 

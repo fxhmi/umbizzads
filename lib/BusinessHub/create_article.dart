@@ -27,7 +27,7 @@ class _CreateBlogState extends State<CreateBlog> {
   firebase_storage.Reference ref;
 
   Future getImage() async {
-    // var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
     final image = await picker.getImage(source: ImageSource.gallery);
     File file = File(image.path);
 
